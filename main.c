@@ -5,6 +5,7 @@
 #include "Types/dynamic_list.h"
 #include "Types/hash_map.h"
 #include "Types/linked_list.h"
+#include "Types/String.h"
 
 typedef struct Queue {
     LinkedList *ll;
@@ -76,10 +77,9 @@ int main() {
     for (int i = 0; i < 100; ++i) {
         list_push(list->as_list, value_new_int(i));
     }
+    ll_push_front(ll, value_new_string_from(string_new(14, "Hello world\0!")));
     ll_push_front(ll, ref(list));
-    ll_print(ll);
-
-    Value *linked = value_new_linked_list(ll);
-    value_free(linked);
     unref(list);
+    ll_print(ll);
+    ll_free(ll);
 }

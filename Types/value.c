@@ -13,6 +13,25 @@
 #include "Types/hash_map.h"
 
 
+char *value_type_to_string(ValueType type) {
+    switch (type) {
+        case ValueType_Integer:
+            return "Integer";
+        case ValueType_Float:
+            return "Float";
+        case ValueType_Bool:
+            return "Bool";
+        case ValueType_String:
+            return "String";
+        case ValueType_List:
+            return "List";
+        case ValueType_LinkedList:
+            return "LinkedList";
+        case ValueType_HashMap:
+            return "HashMap";
+    }
+}
+
 static Value *new_val(ValueType type) {
     Value *val = allocate(1, sizeof(Value));
     val->type = type;
@@ -112,10 +131,8 @@ Value *value_add(Value *left, Value *right) {
             right_node = right_node->next;
         }
         out = value_new_linked_list(ll);
-    }
-
-    if (out == NULL) {
-        printf("Cannot add those types you buffoon.");
+    } else {
+        printf("\nCannot add types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
         exit(1);
     }
 
@@ -138,7 +155,7 @@ Value *value_subtract(Value *left, Value *right) {
         out = value_new_float(left->as_float - right->as_float);
 
     } else {
-        printf("Cannot subtract those types you buffoon.");
+        printf("\nCannot subtract types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
         exit(1);
     }
 
@@ -168,7 +185,7 @@ Value *value_multiply(Value *left, Value *right) {
         out = value_new_string(str->length, str->text);
 
     } else {
-        printf("Cannot multiply those types you buffoon.");
+        printf("\nCannot multiply types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
         exit(1);
     }
 
@@ -177,7 +194,7 @@ Value *value_multiply(Value *left, Value *right) {
 }
 
 
-Value *value_division(Value *left, Value *right) {
+Value *value_divide(Value *left, Value *right) {
     Value *out = NULL;
     if (left->type == ValueType_Integer && right->type == ValueType_Integer) {
         out = value_new_int(left->as_int / right->as_int);
@@ -192,7 +209,7 @@ Value *value_division(Value *left, Value *right) {
         out = value_new_float(left->as_float / right->as_float);
 
     } else {
-        printf("Cannot divide those types you buffoon.");
+        printf("\nCannot divide types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
         exit(1);
     }
 
@@ -295,7 +312,7 @@ int value_hash_c(Value *val) {
         case ValueType_List:
         case ValueType_LinkedList:
         case ValueType_HashMap:
-            printf("Cannot hash a mutable object.");
+            printf("Cannot hash a mutable object: %s", value_type_to_string(val->type));
             exit(1);
 
     }
