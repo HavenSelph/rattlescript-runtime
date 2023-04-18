@@ -16,8 +16,8 @@ static Bucket *bucket_new(Value *key, Value *value) {
 
 static void bucket_free(Bucket *bucket) {
     if (!bucket) return;
-    value_free(bucket->key);
-    value_free(bucket->value);
+    value_unref(bucket->key);
+    value_unref(bucket->value);
     deallocate(bucket);
 }
 
@@ -67,8 +67,8 @@ void hm_push(HashMap *hm, Value *key, Value *value) {
     hm_check_size(hm);
     Bucket *bucket = hm_exists(hm, key);
     if (bucket) {
-        value_free(bucket->value);
-        value_free(key);
+        value_unref(bucket->value);
+        value_unref(key);
         bucket->value = value;
         return;
     }

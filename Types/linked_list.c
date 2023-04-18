@@ -8,14 +8,14 @@
 #include "common.h"
 #include "Types/linked_list.h"
 
-static LLNode *ll_node_new(Value *val) {
+LLNode *ll_node_new(Value *val) {
     LLNode *ll_node = allocate(1, sizeof(LLNode));
     ll_node->val = val;
     return ll_node;
 }
 
 static void ll_node_free(LLNode *ll_node) {
-    value_free(ll_node->val);
+    value_unref(ll_node->val);
     deallocate(ll_node);
 }
 
@@ -39,12 +39,19 @@ LinkedList *ll_new_v(int size, ...) {
 
 void ll_push(LinkedList *ll, Value *val) {
     LLNode *ll_node = ll_node_new(val);
-    LLNode **cur = &ll->start;
-    for (int i = 0; i < ll->size; ++i) {
-        cur = &(*cur)->next;
+    if (ll->size++ == 0) {
+        ll->start = ll_node;
+    } else {
+        ll->end->next = ll_node;
     }
+    ll->end = ll_node;
+}
+
+void ll_push_front(LinkedList *ll, Value *val) {
+    LLNode *ll_node = ll_node_new(val);
+    ll_node->next = ll->start;
+    ll->start = ll_node;
     ll->size++;
-    *cur = ll_node;
 }
 
 void ll_insert(LinkedList *ll, int index, Value *val) {
@@ -85,6 +92,8 @@ void ll_clear(LinkedList *ll) {
         ll_node_free(cur);
         cur = next;
     }
+    ll->end = NULL;
+    ll->start = NULL;
     ll->size = 0;
 }
 

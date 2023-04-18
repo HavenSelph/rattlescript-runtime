@@ -12,8 +12,11 @@ typedef struct LLNode {
     struct LLNode *next;
 } LLNode;
 
+LLNode *ll_node_new(Value *val);
+
 typedef struct LinkedList {
     LLNode *start;
+    LLNode *end;
     int size;
 } LinkedList;
 
@@ -23,6 +26,7 @@ LinkedList *ll_new_v(int size, ...);
 void ll_print(LinkedList *ll);
 
 void ll_push(LinkedList *ll, Value *val);
+void ll_push_front(LinkedList *ll, Value *val);
 void ll_insert(LinkedList *ll, int, Value *val);
 Value *ll_pop(LinkedList *ll);
 

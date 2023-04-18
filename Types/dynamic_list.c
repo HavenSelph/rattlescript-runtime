@@ -73,7 +73,7 @@ void list_insert(List *list, int index, Value *val) {
 
 void list_clear(List *list) {
     for (;0 < list->size; list->size--) {
-        value_free(list->val[list->size-1]);
+        value_unref(list->val[list->size-1]);
     }
 }
 
