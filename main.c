@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include "dynamic_list.h"
-#include "hash_map.h"
-#include "linked_list.h"
+#include "Types/dynamic_list.h"
+#include "Types/hash_map.h"
+#include "Types/linked_list.h"
 
 int main() {
     HashMap *hm = hm_new();
