@@ -4,6 +4,7 @@
 #ifndef DATATYPES_COMMON_H
 #define DATATYPES_COMMON_H
 
+#define endln printf("\n")
 #define ref value_ref
 #define unref value_unref
 
