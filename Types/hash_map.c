@@ -72,7 +72,7 @@ void hm_push(HashMap *hm, Value *key, Value *value) {
         bucket->value = value;
         return;
     }
-    int key_hash = value_hash(key);
+    int key_hash = value_hash_c(key);
     bucket = bucket_new(key, value);
     Bucket **cur = &hm->buckets[key_hash % hm->num_buckets];
     bucket->next = *cur;
@@ -81,10 +81,10 @@ void hm_push(HashMap *hm, Value *key, Value *value) {
 }
 
 Bucket *hm_exists(HashMap *hm, Value *key) {
-    int key_hash = value_hash(key);
+    int key_hash = value_hash_c(key);
     Bucket *current = hm->buckets[key_hash % hm->num_buckets];
     for (;current; current = current->next) {
-        if (value_equals(current->key, key))
+        if (value_equals_c(current->key, key))
             return current;
     }
     return NULL;

@@ -96,7 +96,7 @@ bool value_equals(Value *left, Value *right) {
     }
 }
 
-int value_hash(Value *val) {
+int value_hash_c(Value *val) {
     switch (val->type) {
         case ValueType_Integer:
             return val->as_int * 31;
