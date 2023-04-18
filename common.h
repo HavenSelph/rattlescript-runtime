@@ -4,6 +4,9 @@
 #ifndef DATATYPES_COMMON_H
 #define DATATYPES_COMMON_H
 
+#define ref value_ref
+#define unref value_unref
+
 void *allocate(int num, int size);
 void deallocate(void *ptr);
 

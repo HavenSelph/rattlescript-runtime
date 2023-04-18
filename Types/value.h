@@ -52,10 +52,29 @@ Value *value_new_list(List *list);
 Value *value_new_linked_list(LinkedList *ll);
 Value *value_new_hash_map(HashMap *hm);
 
-bool value_equals(Value *lhs, Value *rhs);
-int value_hash(Value *val);
+// Return Value types
+Value *value_equals(Value *left, Value *right);
+Value *value_hash(Value *val);
+
+Value *value_add(Value *left, Value *right);
+Value *value_subtract(Value *left, Value *right);
+Value *value_multiply(Value *left, Value *right);
+Value *value_divide(Value *left, Value *right);
+
+Value *value_or(Value *left, Value *right);
+Value *value_and(Value *left, Value *right);
+Value *value_not(Value *val);
+
+// Return C types
+bool value_equals_c(Value *left, Value *right);
+bool value_as_bool_c(Value *val);
+bool value_or_c(Value *left, Value *right);
+bool value_and_c(Value *left, Value *right);
+bool value_not_c(Value *val);
+int value_hash_c(Value *val);
 
 Value *value_ref(Value *val);
+void value_unref(Value *val);
 void value_free(Value *val);
 
 void value_print(Value *val);
