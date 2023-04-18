@@ -3,7 +3,7 @@ project(DataTypes C)
 
 set(CMAKE_C_STANDARD 11)
 
-include_directories(Types)
+include_directories(.)
 
 add_executable(DataTypes
         Types/dynamic_list.c
@@ -16,4 +16,4 @@ add_executable(DataTypes
         Types/string.h
         Types/value.c
         Types/value.h
-        main.c)
+        main.c common.c common.h)
