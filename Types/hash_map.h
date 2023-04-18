@@ -5,7 +5,7 @@
 #ifndef DYNAMICLISTS_HASH_MAP_H
 #define DYNAMICLISTS_HASH_MAP_H
 
-#include "value.h"
+#include "Types/value.h"
 
 typedef struct Bucket {
     Value *key;

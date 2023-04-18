@@ -5,13 +5,16 @@
 #ifndef DYNAMICLISTS_STRING_H
 #define DYNAMICLISTS_STRING_H
 
-#include "value.h"
-
 typedef struct String {
-    char *val;
-    int size;
+    char *text;
+    int length;
 } String;
 
-String *str_new(char *val);
+String *string_new(int length, char *text);
+
+int string_compare(String *str1, String *str2);
+void string_print(String *str);
+
+void string_free(String *str);
 
 #endif //DYNAMICLISTS_STRING_H

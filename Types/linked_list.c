@@ -1,25 +1,26 @@
 //
 // Created by haven on 4/7/2023.
 //
-
-#include "linked_list.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "common.h"
+#include "Types/linked_list.h"
+
 static LLNode *ll_node_new(Value *val) {
-    LLNode *ll_node = calloc(1, sizeof(LLNode));
+    LLNode *ll_node = allocate(1, sizeof(LLNode));
     ll_node->val = val;
     return ll_node;
 }
 
 static void ll_node_free(LLNode *ll_node) {
     value_free(ll_node->val);
-    free(ll_node);
+    deallocate(ll_node);
 }
 
 LinkedList *ll_new() {
-    LinkedList *ll = calloc(1, sizeof(LinkedList));
+    LinkedList *ll = allocate(1, sizeof(LinkedList));
     return ll;
 }
 
@@ -72,7 +73,7 @@ Value *ll_pop(LinkedList *ll) {
     }
     ll->size--;
     Value *val = (*last)->val;
-    free(*last);
+    deallocate(*last);
     *last = NULL;
     return val;
 }
@@ -89,7 +90,7 @@ void ll_clear(LinkedList *ll) {
 
 void ll_free(LinkedList *ll) {
     ll_clear(ll);
-    free(ll);
+    deallocate(ll);
 }
 
 void ll_print(LinkedList *ll) {

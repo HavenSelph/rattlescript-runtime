@@ -1,25 +1,37 @@
 //
 // Created by haven on 4/17/2023.
 //
-#include "string.h"
-#include <stdlib.h>
-#include "string.h"
+#include <memory.h>
+#include <stdio.h>
 
-String *str_new(char *val) {
-    String *str = calloc(1, sizeof(String));
-    str->val = calloc(strlen(val), sizeof(char));
-    strcpy(str->val, val);
-    str->size = strlen(val);
+#include "common.h"
+#include "Types/string.h"
+
+String *string_new(int length, char *text) {
+    String *str = allocate(1, sizeof(String));
+    str->text = allocate(length, sizeof(char));
+    str->length = length;
+    for (int i = 0; i < length; ++i) {
+        str->text[i] = text[i];
+    }
     return str;
 }
 
-String *str_add(String *str1, String *str2) {
-    String *str = calloc(1, sizeof(String));
-    str->val = calloc(str1->size + str2->size, sizeof(char));
-    for (int i = 0; i < str1->size; ++i) {
-        str->val[i] = str1->val[i];
-    }
-    str->size = str1->size + str2->size;
+int string_compare(String *str1, String *str2) {
+    if (str1->length != str2->length) return 0;
+    return memcmp(str1->text, str2->text, str1->length)==0;
+}
 
-    return str;
+void string_print(String *str) {
+    printf("'");
+    for (int i = 0; i < str->length; ++i) {
+        printf("%c", str->text[i]);
+    }
+    printf("'");
+}
+
+void string_free(String *str) {
+    if (!str) return;
+    deallocate(str->text);
+    deallocate(str);
 }

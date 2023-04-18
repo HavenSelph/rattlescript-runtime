@@ -28,13 +28,14 @@ typedef enum ValueType {
 typedef struct LinkedList LinkedList;
 typedef struct List List;
 typedef struct HashMap HashMap;
+typedef struct String String;
 
 typedef struct Value {
     union {
-        char *as_text;
         bool as_bool;
         float as_float;
         int as_int;
+        String *as_string;
         List *as_list;
         LinkedList *as_linked_list;
         HashMap *as_hash_map;
@@ -46,7 +47,7 @@ typedef struct Value {
 Value *value_new_int(int num);
 Value *value_new_float(float num);
 Value *value_new_bool(bool boo);
-Value *value_new_string(char *str);
+Value *value_new_string(int length, char *str);
 Value *value_new_list(List *list);
 Value *value_new_linked_list(LinkedList *ll);
 Value *value_new_hash_map(HashMap *hm);

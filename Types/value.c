@@ -3,22 +3,17 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#include "string.h"
 
-#include "value.h"
-#include "linked_list.h"
-#include "dynamic_list.h"
-#include "hash_map.h"
-
-// todo: fix string escape characters
-
-static int allocated = 0;
-static int freed = 0;
+#include "common.h"
+#include "Types/value.h"
+#include "Types/string.h"
+#include "Types/linked_list.h"
+#include "Types/dynamic_list.h"
+#include "Types/hash_map.h"
 
 
 static Value *new_val(ValueType type) {
-    allocated++;
-    Value *val = calloc(1, sizeof(Value));
+    Value *val = allocate(1, sizeof(Value));
     val->type = type;
     val->ref_count = 1;
     return val;
@@ -43,13 +38,9 @@ Value *value_new_bool(bool boo) {
     return val;
 }
 
-Value *value_new_string(char *text) {
-    /*
-     * Allocation and copying is handled by caller
-     */
+Value *value_new_string(int length, char *text) {
     Value *val = new_val(ValueType_String);
-    val->as_text = calloc(strlen(text), sizeof(char));
-    strcpy(val->as_text, text);
+    val->as_string = string_new(length, text);
     return val;
 }
 
@@ -81,7 +72,7 @@ bool value_equals(Value *left, Value *right) {
         case ValueType_Bool:
             return left->as_bool == right->as_bool;
         case ValueType_String:
-            return strcmp(left->as_text, right->as_text) == 0;
+            return string_compare(left->as_string, right->as_string);
         case ValueType_List:
             if (left->as_list->size != right->as_list->size) return false;
             for (int i = 0; i < left->as_list->size; ++i) {
@@ -115,9 +106,9 @@ int value_hash(Value *val) {
             return val->as_bool * 13;
         case ValueType_String: {
             int hash = 0;
-            for (int i = 0; i < strlen(val->as_text); ++i) {
+            for (int i = 0; i < val->as_string->length; ++i) {
                 hash = hash << 3;
-                hash ^= val->as_text[i];
+                hash ^= val->as_string->text[i];
             }
             return hash;
         }
@@ -134,7 +125,7 @@ void value_free(Value *val) {
     if (--val->ref_count > 0) return;
     switch (val->type) {
         case ValueType_String: {
-            free(val->as_text);
+            string_free(val->as_string);
             break;
         }
         case ValueType_List: {
@@ -151,8 +142,7 @@ void value_free(Value *val) {
         }
         default: break;
     }
-    free(val);
-    freed++;
+    deallocate(val);
 }
 
 Value *value_ref(Value *val) {
@@ -165,14 +155,10 @@ void value_print(Value *val) {
         case ValueType_Integer: printf("%d", val->as_int); break;
         case ValueType_Float: printf("%f", val->as_float); break;
         case ValueType_Bool: printf("%s", val->as_float ? "true" : "false"); break;
-        case ValueType_String: printf("'%s'", val->as_text); break;
+        case ValueType_String: string_print(val->as_string); break;
         case ValueType_List: list_print(val->as_list); break;
         case ValueType_LinkedList: ll_print(val->as_linked_list); break;
         case ValueType_HashMap: hm_print(val->as_hash_map); break;
     }
 }
 
-__attribute__((destructor))
-void print_free() {
-    printf("\nAllocated: %d, Freed: %d", allocated, freed);
-}

@@ -5,7 +5,7 @@
 #ifndef DYNAMICLISTS_DYNAMIC_LIST_H
 #define DYNAMICLISTS_DYNAMIC_LIST_H
 
-#include "value.h"
+#include "Types/value.h"
 
 typedef struct List {
     Value **val;

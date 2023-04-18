@@ -3,12 +3,12 @@
 //
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdlib.h>
 
-#include "hash_map.h"
+#include "common.h"
+#include "Types/hash_map.h"
 
 static Bucket *bucket_new(Value *key, Value *value) {
-    Bucket *bucket = calloc(1, sizeof(Bucket));
+    Bucket *bucket = allocate(1, sizeof(Bucket));
     bucket->key = key;
     bucket->value = value;
     return bucket;
@@ -18,7 +18,7 @@ static void bucket_free(Bucket *bucket) {
     if (!bucket) return;
     value_free(bucket->key);
     value_free(bucket->value);
-    free(bucket);
+    deallocate(bucket);
 }
 
 
@@ -46,7 +46,7 @@ Value *hm_get(HashMap *hm, Value *key) {
 
 static void hm_check_size(HashMap *hm) {
     if (hm->size > hm->num_buckets * 0.75) {
-        Bucket **new_buckets = calloc(hm->num_buckets*2, sizeof(Bucket*));
+        Bucket **new_buckets = allocate(hm->num_buckets*2, sizeof(Bucket*));
         Bucket **old_buckets = hm->buckets;
         int old_num_buckets = hm->num_buckets;
         hm->buckets = new_buckets;
@@ -91,8 +91,8 @@ Bucket *hm_exists(HashMap *hm, Value *key) {
 }
 
 HashMap *hm_new() {
-    HashMap *hm = calloc(1, sizeof(HashMap));
-    hm->buckets = calloc(64, sizeof(Bucket*));
+    HashMap *hm = allocate(1, sizeof(HashMap));
+    hm->buckets = allocate(64, sizeof(Bucket*));
     hm->num_buckets = 64;
     return hm;
 }
@@ -119,5 +119,5 @@ void hm_free(HashMap *hm) {
             current = next;
         }
     }
-    free(hm);
+    deallocate(hm);
 }

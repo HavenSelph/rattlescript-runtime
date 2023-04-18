@@ -1,15 +1,16 @@
 //
 // Created by haven on 4/7/2023.
 //
-
-#include "dynamic_list.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "common.h"
+#include "Types/dynamic_list.h"
+
 List *list_new(int capacity) {
-    List *list = calloc(1, sizeof(List));
-    list->val = calloc(capacity, sizeof(Value));
+    List *list = allocate(1, sizeof(List));
+    list->val = allocate(capacity, sizeof(Value));
     list->size = 0;
     list->capacity = capacity;
     return list;
@@ -78,8 +79,8 @@ void list_clear(List *list) {
 
 void list_free(List *list) {
     list_clear(list);
-    free(list->val);
-    free(list);
+    deallocate(list->val);
+    deallocate(list);
 }
 
 void list_print(List *list) {

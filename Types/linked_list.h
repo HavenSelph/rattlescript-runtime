@@ -5,7 +5,7 @@
 #ifndef DYNAMICLISTS_LINKED_LIST_H
 #define DYNAMICLISTS_LINKED_LIST_H
 
-#include "value.h"
+#include "Types/value.h"
 
 typedef struct LLNode {
     Value *val;
