@@ -1,17 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "Types/dynamic_list.h"
 #include "Types/hash_map.h"
 #include "Types/linked_list.h"
 
+
 int main() {
-    HashMap *hm = hm_new();
-    for (int i = 0; i < 10000000; ++i) {
-        if (i % 1000000 == 0) printf("\nSize: %d, Number of buckets: %d", hm->size, hm->num_buckets);
-        Value *k = value_new_int(i);
-        Value *v = value_new_string("hello world");
-        hm_push(hm, k, v);
+    Value *val = value_new_list(list_new(10));
+    Value *val2 = value_new_list(list_new(10));
+    for (int i = 0; i < 10; i++) {
+        list_push(val->as_list, value_new_int(i));
+        list_push(val2->as_list, value_new_int(i));
     }
-    Value *val = value_new_hash_map(hm);
+    list_push(val->as_list, value_ref(val2));
+    value_free(val2);
+    value_print(val);
     value_free(val);
 }
