@@ -455,7 +455,6 @@ Value *value_ref(Value *val) {
 }
 
 void value_unref(Value *val) {
-    printf("Unref: %p, %d\n", val, val->ref_count);
     if (--val->ref_count > 0) return;
     value_free(val);
 }
