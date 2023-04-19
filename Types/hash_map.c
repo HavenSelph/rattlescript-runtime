@@ -2,6 +2,7 @@
 // Created by haven on 4/7/2023.
 //
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
 #include "common.h"
@@ -38,10 +39,14 @@ void hm_print(HashMap *hm) {
 
 Value *hm_get(HashMap *hm, Value *key) {
     Bucket *bucket = hm_exists(hm, key);
+    value_unref(key);
     if (bucket) {
         return bucket->value;
     }
-    return NULL;
+    printf("Key ");
+    value_print(key);
+    printf(" not found in HashMap");
+    exit(1);
 }
 
 static void hm_check_size(HashMap *hm) {
@@ -68,7 +73,6 @@ void hm_push(HashMap *hm, Value *key, Value *value) {
     Bucket *bucket = hm_exists(hm, key);
     if (bucket) {
         value_unref(bucket->value);
-        value_unref(key);
         bucket->value = value;
         return;
     }
@@ -119,5 +123,6 @@ void hm_free(HashMap *hm) {
             current = next;
         }
     }
+    deallocate(hm->buckets);
     deallocate(hm);
 }
