@@ -20,6 +20,7 @@ typedef enum ValueType {
     ValueType_Float,
     ValueType_Bool,
     ValueType_String,
+    ValueType_RValue,
     ValueType_List,
     ValueType_LinkedList,
     ValueType_HashMap,
@@ -31,6 +32,7 @@ typedef struct LinkedList LinkedList;
 typedef struct List List;
 typedef struct HashMap HashMap;
 typedef struct String String;
+typedef struct RVector RVector;
 
 typedef struct Value {
     union {
@@ -41,6 +43,7 @@ typedef struct Value {
         List *as_list;
         LinkedList *as_linked_list;
         HashMap *as_hash_map;
+        RVector *as_rvector;
     };
     ValueType type;
     int ref_count;
@@ -51,6 +54,7 @@ Value *value_new_float(float num);
 Value *value_new_bool(bool boo);
 Value *value_new_string_from(String *str);
 Value *value_new_string(int length, char *str);
+Value *value_new_rvector(int size, int *data);
 Value *value_new_list(List *list);
 Value *value_new_linked_list(LinkedList *ll);
 Value *value_new_hash_map(HashMap *hm);

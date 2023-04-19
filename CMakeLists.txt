@@ -16,4 +16,4 @@ add_executable(DataTypes
         Types/string.h
         Types/value.c
         Types/value.h
-        main.c common.c common.h)
+        main.c common.c common.h Types/vector.c)
