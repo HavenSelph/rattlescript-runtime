@@ -17,6 +17,13 @@ String *string_new(int length, char *text) {
     return str;
 }
 
+String *string_new_empty(int length) {
+    String *str = allocate(1, sizeof(String));
+    str->text = allocate(length, sizeof(char));
+    str->length = length;
+    return str;
+}
+
 int string_compare(String *str1, String *str2) {
     if (str1->length != str2->length) return 0;
     return memcmp(str1->text, str2->text, str1->length)==0;
@@ -31,7 +38,6 @@ void string_print(String *str) {
 }
 
 void string_free(String *str) {
-    if (!str) return;
     deallocate(str->text);
     deallocate(str);
 }

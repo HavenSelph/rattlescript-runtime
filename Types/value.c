@@ -19,6 +19,8 @@ char *value_type_to_string(ValueType type) {
             return "Integer";
         case ValueType_Float:
             return "Float";
+        case ValueType_Double:
+            return "Double";
         case ValueType_Bool:
             return "Bool";
         case ValueType_String:
@@ -49,6 +51,12 @@ Value *value_new_int(int num) {
 Value *value_new_float(float num) {
     Value *val = new_val(ValueType_Float);
     val->as_float = num;
+    return val;
+}
+
+Value *value_new_double(double dub) {
+    Value *val = new_val(ValueType_Double);
+    val->as_double = dub;
     return val;
 }
 
@@ -112,11 +120,26 @@ Value *value_add(Value *left, Value *right) {
 
     } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
         out = value_new_float(left->as_float + right->as_float);
+    } else if (left->type == ValueType_Double && right->type == ValueType_Double) {
+        out = value_new_double(left->as_double + right->as_double);
+
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Double) {
+        out = value_new_double(left->as_int + right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Integer) {
+        out = value_new_double(left->as_double + right->as_int);
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Double) {
+        out = value_new_double(left->as_float + right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Float) {
+        out = value_new_double(left->as_double + right->as_float);
 
     } else if (left->type == ValueType_String && right->type == ValueType_String) {
-        String *str = string_new(left->as_string->length + right->as_string->length, left->as_string->text);
+        String *str = string_new_empty(left->as_string->length + right->as_string->length);
+        memcpy(str->text, left->as_string->text, left->as_string->length);
         memcpy(str->text + left->as_string->length, right->as_string->text, right->as_string->length);
-        out = value_new_string(str->length, str->text);
+        out = value_new_string_from(str);
 
     } else if (left->type == ValueType_LinkedList && right->type == ValueType_LinkedList) {
         LinkedList *ll = ll_new();
@@ -153,6 +176,20 @@ Value *value_subtract(Value *left, Value *right) {
 
     } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
         out = value_new_float(left->as_float - right->as_float);
+    } else if (left->type == ValueType_Double && right->type == ValueType_Double) {
+        out = value_new_double(left->as_double - right->as_double);
+
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Double) {
+        out = value_new_double(left->as_int - right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Integer) {
+        out = value_new_double(left->as_double - right->as_int);
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Double) {
+        out = value_new_double(left->as_float - right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Float) {
+        out = value_new_double(left->as_double - right->as_float);
 
     } else {
         printf("\nCannot subtract types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
@@ -176,6 +213,20 @@ Value *value_multiply(Value *left, Value *right) {
 
     } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
         out = value_new_float(left->as_float * right->as_float);
+    } else if (left->type == ValueType_Double && right->type == ValueType_Double) {
+        out = value_new_double(left->as_double * right->as_double);
+
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Double) {
+        out = value_new_double(left->as_int * right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Integer) {
+        out = value_new_double(left->as_double * right->as_int);
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Double) {
+        out = value_new_double(left->as_float * right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Float) {
+        out = value_new_double(left->as_double * right->as_float);
 
     } else if (left->type == ValueType_String && right->type == ValueType_Integer) {
         String *str = string_new(left->as_string->length * right->as_int, left->as_string->text);
@@ -207,6 +258,20 @@ Value *value_divide(Value *left, Value *right) {
 
     } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
         out = value_new_float(left->as_float / right->as_float);
+    } else if (left->type == ValueType_Double && right->type == ValueType_Double) {
+        out = value_new_double(left->as_double / right->as_double);
+
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Double) {
+        out = value_new_double(left->as_int / right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Integer) {
+        out = value_new_double(left->as_double / right->as_int);
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Double) {
+        out = value_new_double(left->as_float / right->as_double);
+
+    } else if (left->type == ValueType_Double && right->type == ValueType_Float) {
+        out = value_new_double(left->as_double / right->as_float);
 
     } else {
         printf("\nCannot divide types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
@@ -266,6 +331,8 @@ bool value_equals_c(Value *left, Value *right) {
             return left->as_int == right->as_int;
         case ValueType_Float:
             return left->as_float == right->as_float;
+        case ValueType_Double:
+            return left->as_double == right->as_double;
         case ValueType_Bool:
             return left->as_bool == right->as_bool;
         case ValueType_String:
@@ -299,6 +366,8 @@ int value_hash_c(Value *val) {
             return val->as_int * 31;
         case ValueType_Float:
             return (int) val->as_float * 67;
+        case ValueType_Double:
+            return (int) val->as_double * 67;
         case ValueType_Bool:
             return val->as_bool * 13;
         case ValueType_String: {
@@ -325,6 +394,8 @@ bool value_as_bool_c(Value *val) {
             return val->as_int != 0;
         case ValueType_Float:
             return val->as_float != 0;
+        case ValueType_Double:
+            return val->as_double != 0;
         case ValueType_Bool:
             return val->as_bool;
         case ValueType_String:
@@ -352,7 +423,6 @@ bool value_not_c(Value *val) {
     bool out = !value_as_bool_c(val);
     return out;
 }
-
 
 
 void value_free(Value *val) {
@@ -385,6 +455,7 @@ Value *value_ref(Value *val) {
 }
 
 void value_unref(Value *val) {
+    printf("Unref: %p, %d\n", val, val->ref_count);
     if (--val->ref_count > 0) return;
     value_free(val);
 }
@@ -397,8 +468,11 @@ void value_print(Value *val) {
         case ValueType_Float:
             printf("%f", val->as_float);
             break;
+        case ValueType_Double:
+            printf("%f", val->as_double);
+            break;
         case ValueType_Bool:
-            printf("%s", val->as_float ? "true" : "false");
+            printf("%s", val->as_bool ? "true" : "false");
             break;
         case ValueType_String:
             string_print(val->as_string);
