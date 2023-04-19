@@ -6,17 +6,13 @@ static int freed = 0;
 
 void *allocate(int num, int size) {
     allocated++;
-    printf("Allocating %d bytes: ", num*size);
     void *out = calloc(num, size);
-    printf("%p\n", out);
     return out;
 }
 
 void deallocate(void *ptr) {
     freed++;
-    printf("Freeing %p ", ptr);
     free(ptr);
-    printf("Freed!\n");
 }
 
 __attribute__((destructor))
