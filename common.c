@@ -6,7 +6,8 @@ static int freed = 0;
 
 void *allocate(int num, int size) {
     allocated++;
-    return calloc(num, size);
+    void *out = calloc(num, size);
+    return out;
 }
 
 void deallocate(void *ptr) {

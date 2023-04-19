@@ -11,6 +11,7 @@ typedef struct String {
 } String;
 
 String *string_new(int length, char *text);
+String *string_new_empty(int length);
 
 int string_compare(String *str1, String *str2);
 void string_print(String *str);

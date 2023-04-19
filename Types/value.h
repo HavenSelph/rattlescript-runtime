@@ -18,6 +18,7 @@
 typedef enum ValueType {
     ValueType_Integer,
     ValueType_Float,
+    ValueType_Double,
     ValueType_Bool,
     ValueType_String,
     ValueType_RValue,
@@ -37,8 +38,9 @@ typedef struct RVector RVector;
 typedef struct Value {
     union {
         bool as_bool;
-        float as_float;
         int as_int;
+        float as_float;
+        double as_double;
         String *as_string;
         List *as_list;
         LinkedList *as_linked_list;
@@ -51,6 +53,7 @@ typedef struct Value {
 
 Value *value_new_int(int num);
 Value *value_new_float(float num);
+Value *value_new_double(double num);
 Value *value_new_bool(bool boo);
 Value *value_new_string_from(String *str);
 Value *value_new_string(int length, char *str);
