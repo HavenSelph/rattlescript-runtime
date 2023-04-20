@@ -2,6 +2,7 @@
 // Created by haven on 4/19/2023.
 //
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdio.h>
 
 #include "common.h"
@@ -14,6 +15,19 @@ Vector *vector_new(ValueType type) {
     vector->values = allocate(vector->capacity, sizeof(Value *));
     return vector;
 }
+
+Vector *vector_new_v(int size, ValueType type, ...) {
+    Vector *vector = vector_new(type);
+    va_list args;
+    va_start(args, type);
+    for (int i = 0; i < size; ++i) {
+        Value *val = va_arg(args, Value*);
+        vector_push(vector, val);
+    }
+    va_end(args);
+    return vector;
+}
+
 
 void vector_check_over(Vector *vector) {
     if (vector->size < vector->capacity/4 && vector->capacity > 10) {
@@ -45,6 +59,14 @@ Value *vector_pop(Vector *vector) {
         exit(1);
     }
     return vector->values[--vector->size];
+}
+
+Value *vector_at(Vector *vector, int index) {
+    if (index < 0 || index >= vector->size) {
+        printf("Vector index out of bounds\n");
+        exit(1);
+    }
+    return ref(vector->values[index]);
 }
 
 void vector_print(Vector *vector) {

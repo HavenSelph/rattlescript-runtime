@@ -15,6 +15,7 @@ typedef struct Vector {
 } Vector;
 
 Vector *vector_new(ValueType type);
+Vector *vector_new_v(int size, ValueType type, ...);
 
 void vector_push(Vector *vector, Value *value);
 void vector_insert(Vector *vector, int index, Value *value);
