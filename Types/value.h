@@ -18,7 +18,6 @@
 typedef enum ValueType {
     ValueType_Integer,
     ValueType_Float,
-    ValueType_Double,
     ValueType_Bool,
     ValueType_String,
     ValueType_List,
