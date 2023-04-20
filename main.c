@@ -6,18 +6,16 @@
 #include "Types/linked_list.h"
 #include "Types/string.h"
 #include "Types/queue.h"
+#include "Types/vector.h"
 
 
 int main() {
-    Queue *queue = queue_new();
-    queue_enqueue(queue, value_new_int(1));
-    queue_enqueue(queue, value_new_int(2));
-    queue_enqueue(queue, value_new_int(3));
+    Vector *vec = vector_new(ValueType_Integer);
+    vector_push(vec, value_new_int(1));
+    vector_push(vec, value_new_int(2));
+    vector_push(vec, value_new_int(3));
 
-    queue_print(queue); endln;
-    Value *val = queue_dequeue(queue);
-    value_print(val); endln;
-    queue_print(queue); endln;
-    value_unref(val);
-    queue_free(queue);
+    vector_print(vec);
+
+    vector_free(vec);
 }

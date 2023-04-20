@@ -22,6 +22,7 @@ typedef enum ValueType {
     ValueType_Bool,
     ValueType_String,
     ValueType_List,
+    ValueType_Vector,
     ValueType_LinkedList,
     ValueType_Queue,
     ValueType_HashMap,
@@ -31,6 +32,7 @@ char *value_type_to_string(ValueType type);
 
 typedef struct LinkedList LinkedList;
 typedef struct List List;
+typedef struct Vector Vector;
 typedef struct HashMap HashMap;
 typedef struct String String;
 typedef struct Queue Queue;
@@ -43,6 +45,7 @@ typedef struct Value {
         double as_double;
         String *as_string;
         List *as_list;
+        Vector *as_vector;
         LinkedList *as_linked_list;
         Queue *as_queue;
         HashMap *as_hash_map;
@@ -58,6 +61,7 @@ Value *value_new_bool(bool boo);
 Value *value_new_string_from(String *str);
 Value *value_new_string(int length, char *str);
 Value *value_new_list(List *list);
+Value *value_new_vector(Vector *vector);
 Value *value_new_linked_list(LinkedList *ll);
 Value *value_new_queue(Queue *queue);
 Value *value_new_hash_map(HashMap *hm);

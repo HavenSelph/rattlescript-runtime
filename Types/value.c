@@ -8,8 +8,9 @@
 #include "common.h"
 #include "Types/value.h"
 #include "Types/string.h"
-#include "Types/linked_list.h"
 #include "Types/dynamic_list.h"
+#include "Types/vector.h"
+#include "Types/linked_list.h"
 #include "Types/hash_map.h"
 #include "Types/queue.h"
 
@@ -28,6 +29,8 @@ char *value_type_to_string(ValueType type) {
             return "String";
         case ValueType_List:
             return "List";
+        case ValueType_Vector:
+            return "Vector";
         case ValueType_LinkedList:
             return "LinkedList";
         case ValueType_Queue:
@@ -84,6 +87,12 @@ Value *value_new_string_from(String *text) {
 Value *value_new_list(List *list) {
     Value *val = new_val(ValueType_List);
     val->as_list = list;
+    return val;
+}
+
+Value *value_new_vector(Vector *vector) {
+    Value *val = new_val(ValueType_Vector);
+    val->as_vector = vector;
     return val;
 }
 
@@ -353,6 +362,12 @@ bool value_equals_c(Value *left, Value *right) {
                 if (!value_equals_c(left->as_list->val[i], right->as_list->val[i])) return false;
             }
             return true;
+        case ValueType_Vector:
+            if (left->as_vector->size != right->as_vector->size) return false;
+            for (int i = 0; i < left->as_vector->size; ++i) {
+                if (!value_equals_c(left->as_vector->values[i], right->as_vector->values[i])) return false;
+            }
+            return true;
         case ValueType_LinkedList: {
             if (left->as_linked_list->size != right->as_linked_list->size) return false;
             LLNode *left_node = left->as_linked_list->start;
@@ -361,7 +376,7 @@ bool value_equals_c(Value *left, Value *right) {
                 if (!value_equals_c(left_node->val, right_node->val)) return false;
                 left_node = left_node->next;
                 right_node = right_node->next;
-            } if (right_node != NULL) return false;
+            }
             return true;
         }
         case ValueType_Queue:
@@ -372,7 +387,7 @@ bool value_equals_c(Value *left, Value *right) {
                 if (!value_equals_c(left_node->value, right_node->value)) return false;
                 left_node = left_node->next;
                 right_node = right_node->next;
-            } if (right_node != NULL) return false;
+            }
             return true;
         case ValueType_HashMap:
             printf("Cannot compare hash maps");
@@ -399,6 +414,7 @@ int value_hash_c(Value *val) {
             return hash;
         }
         case ValueType_List:
+        case ValueType_Vector:
         case ValueType_LinkedList:
         case ValueType_Queue:
         case ValueType_HashMap:
@@ -423,6 +439,8 @@ bool value_as_bool_c(Value *val) {
             return val->as_string->length != 0;
         case ValueType_List:
             return val->as_list->size != 0;
+        case ValueType_Vector:
+            return val->as_vector->size != 0;
         case ValueType_LinkedList:
             return val->as_linked_list->size != 0;
         case ValueType_Queue:
@@ -456,6 +474,10 @@ void value_free(Value *val) {
         }
         case ValueType_List: {
             list_free(val->as_list);
+            break;
+        }
+        case ValueType_Vector: {
+            vector_free(val->as_vector);
             break;
         }
         case ValueType_LinkedList: {
@@ -505,6 +527,9 @@ void value_print(Value *val) {
             break;
         case ValueType_List:
             list_print(val->as_list);
+            break;
+        case ValueType_Vector:
+            vector_print(val->as_vector);
             break;
         case ValueType_LinkedList:
             ll_print(val->as_linked_list);
