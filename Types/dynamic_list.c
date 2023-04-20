@@ -32,14 +32,14 @@ List *list_new_v(int size, ...) {
 static void list_check_under(List *list) {
     if (list->size >= list->capacity) {
         list->capacity = (list->capacity == 0) ? 10 : list->capacity*2;
-        list->val = realloc(list->val, list->capacity*sizeof(Value));
+        list->val = reallocate(list->val, list->capacity*sizeof(Value));
     }
 }
 
 static void list_check_over(List *list) {
     if (list->size < list->capacity/4 && list->capacity > 10) {
         list->capacity /= 2;
-        list->val = realloc(list->val, list->capacity*sizeof(Value));
+        list->val = reallocate(list->val, list->capacity*sizeof(Value));
     }
 }
 

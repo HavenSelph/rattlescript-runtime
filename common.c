@@ -6,8 +6,13 @@ static int freed = 0;
 
 void *allocate(int num, int size) {
     allocated++;
-    void *out = calloc(num, size);
-    return out;
+    return calloc(num, size);
+}
+
+void *reallocate(void *ptr, int size) {
+    allocated++;
+    if (ptr) freed++;
+    return realloc(ptr, size);
 }
 
 void deallocate(void *ptr) {
