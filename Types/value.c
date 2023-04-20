@@ -11,6 +11,7 @@
 #include "Types/linked_list.h"
 #include "Types/dynamic_list.h"
 #include "Types/hash_map.h"
+#include "Types/queue.h"
 
 
 char *value_type_to_string(ValueType type) {
@@ -29,6 +30,8 @@ char *value_type_to_string(ValueType type) {
             return "List";
         case ValueType_LinkedList:
             return "LinkedList";
+        case ValueType_Queue:
+            return "Queue";
         case ValueType_HashMap:
             return "HashMap";
     }
@@ -89,6 +92,13 @@ Value *value_new_linked_list(LinkedList *ll) {
     val->as_linked_list = ll;
     return val;
 }
+
+Value *value_new_queue(Queue *queue) {
+    Value *val = new_val(ValueType_Queue);
+    val->as_queue = queue;
+    return val;
+}
+
 
 Value *value_new_hash_map(HashMap *map) {
     Value *val = new_val(ValueType_HashMap);
@@ -351,12 +361,22 @@ bool value_equals_c(Value *left, Value *right) {
                 if (!value_equals_c(left_node->val, right_node->val)) return false;
                 left_node = left_node->next;
                 right_node = right_node->next;
-            }
-            if (right_node != NULL) return false;
+            } if (right_node != NULL) return false;
             return true;
         }
+        case ValueType_Queue:
+            if (left->as_queue->size != right->as_queue->size) return false;
+            QueueNode *left_node = left->as_queue->head;
+            QueueNode *right_node = right->as_queue->head;
+            while (left_node != NULL) {
+                if (!value_equals_c(left_node->value, right_node->value)) return false;
+                left_node = left_node->next;
+                right_node = right_node->next;
+            } if (right_node != NULL) return false;
+            return true;
         case ValueType_HashMap:
-            return false;
+            printf("Cannot compare hash maps");
+            exit(1);
     }
 }
 
@@ -380,8 +400,9 @@ int value_hash_c(Value *val) {
         }
         case ValueType_List:
         case ValueType_LinkedList:
+        case ValueType_Queue:
         case ValueType_HashMap:
-            printf("Cannot hash a mutable object: %s", value_type_to_string(val->type));
+            printf("Cannot hash a complex mutable object: %s", value_type_to_string(val->type));
             exit(1);
 
     }
@@ -404,6 +425,8 @@ bool value_as_bool_c(Value *val) {
             return val->as_list->size != 0;
         case ValueType_LinkedList:
             return val->as_linked_list->size != 0;
+        case ValueType_Queue:
+            return val->as_queue->size != 0;
         case ValueType_HashMap:
             return val->as_hash_map->size != 0;
     }
@@ -437,6 +460,10 @@ void value_free(Value *val) {
         }
         case ValueType_LinkedList: {
             ll_free(val->as_linked_list);
+            break;
+        }
+        case ValueType_Queue: {
+            queue_free(val->as_queue);
             break;
         }
         case ValueType_HashMap: {
@@ -482,9 +509,11 @@ void value_print(Value *val) {
         case ValueType_LinkedList:
             ll_print(val->as_linked_list);
             break;
+        case ValueType_Queue:
+            queue_print(val->as_queue);
+            break;
         case ValueType_HashMap:
             hm_print(val->as_hash_map);
             break;
     }
 }
-
