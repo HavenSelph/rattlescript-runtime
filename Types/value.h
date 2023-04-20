@@ -42,7 +42,6 @@ typedef struct Value {
         bool as_bool;
         int as_int;
         float as_float;
-        double as_double;
         String *as_string;
         List *as_list;
         Vector *as_vector;
@@ -56,7 +55,6 @@ typedef struct Value {
 
 Value *value_new_int(int num);
 Value *value_new_float(float num);
-Value *value_new_double(double num);
 Value *value_new_bool(bool boo);
 Value *value_new_string_from(String *str);
 Value *value_new_string(int length, char *str);
