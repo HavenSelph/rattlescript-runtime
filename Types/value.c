@@ -356,7 +356,6 @@ int value_hash_c(Value *val) {
     }
 }
 
-
 bool value_as_bool_c(Value *val) {
     switch (val->type) {
         case ValueType_Integer:

@@ -7,18 +7,17 @@
 #include "Types/string.h"
 #include "Types/queue.h"
 #include "Types/vector.h"
+#include "Context/scope.h"
 
 
 int main() {
-    Value *val1 = value_new_int(1);
-    Value *val2 = value_new_int(2);
-    Value *val3 = value_new_int(3);
-    Value *val4 = value_new_int(4);
-
-    Vector *vec = vector_new_v(4, ValueType_Integer, val1, val2, val3, val4);
-    vector_print(vec); endln;
-    val1 = vector_pop(vec);
-    vector_free(vec);
-    value_print(val1); endln;
-    value_free(val1);
+    int size = 1000000;
+    Value *hm = value_new_hash_map(hm_new_sized(size));
+    for (int i = 0; i < size; ++i) {
+        Value *key = value_new_int(i);
+        Value *val = value_new_string(5, "hello");
+        hm_push(hm->as_hash_map, key, val);
+    }
+    value_free(hm);
+    return 0;
 }

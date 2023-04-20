@@ -16,7 +16,6 @@ static Bucket *bucket_new(Value *key, Value *value) {
 }
 
 static void bucket_free(Bucket *bucket) {
-    if (!bucket) return;
     value_unref(bucket->key);
     value_unref(bucket->value);
     deallocate(bucket);
@@ -56,15 +55,17 @@ static void hm_check_size(HashMap *hm) {
         int old_num_buckets = hm->num_buckets;
         hm->buckets = new_buckets;
         hm->num_buckets *= 2;
+        hm->size = 0;
         for (int i = 0; i < old_num_buckets; ++i) {
             Bucket *current = old_buckets[i];
             while (current) {
                 Bucket *next = current->next;
-                hm_push(hm, current->key, current->value);
+                hm_push(hm, ref(current->key), ref(current->value));
+                bucket_free(current);
                 current = next;
             }
-            bucket_free(current);
         }
+        deallocate(old_buckets);
     }
 }
 
@@ -78,9 +79,8 @@ void hm_push(HashMap *hm, Value *key, Value *value) {
     }
     int key_hash = value_hash_c(key);
     bucket = bucket_new(key, value);
-    Bucket **cur = &hm->buckets[key_hash % hm->num_buckets];
-    bucket->next = *cur;
-    *cur = bucket;
+    bucket->next = hm->buckets[key_hash % hm->num_buckets];
+    hm->buckets[key_hash % hm->num_buckets] = bucket;
     hm->size++;
 }
 
@@ -94,15 +94,20 @@ Bucket *hm_exists(HashMap *hm, Value *key) {
     return NULL;
 }
 
-HashMap *hm_new() {
+HashMap *hm_new_sized(int size) {
     HashMap *hm = allocate(1, sizeof(HashMap));
-    hm->buckets = allocate(64, sizeof(Bucket*));
-    hm->num_buckets = 64;
+    hm->buckets = allocate(size, sizeof(Bucket*));
+    hm->num_buckets = size;
+    return hm;
+}
+
+HashMap *hm_new() {
+    HashMap *hm = hm_new_sized(16);
     return hm;
 }
 
 HashMap *hm_new_v(int size, ...) {
-    HashMap *hm = hm_new();
+    HashMap *hm = hm_new_sized(size * 2 > 16 ? size * 2 : 16);
     va_list args;
     va_start(args, size);
     for (int i = 0; i < size; ++i) {

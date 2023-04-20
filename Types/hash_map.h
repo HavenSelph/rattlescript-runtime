@@ -21,6 +21,7 @@ typedef struct HashMap {
 } HashMap;
 
 HashMap *hm_new();
+HashMap *hm_new_sized(int size);
 HashMap *hm_new_v(int size, ...);
 
 void hm_push(HashMap *hm, Value *key, Value *value);
