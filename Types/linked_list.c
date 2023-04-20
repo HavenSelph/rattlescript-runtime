@@ -85,6 +85,31 @@ Value *ll_pop(LinkedList *ll) {
     return val;
 }
 
+Value *ll_pop_front(LinkedList *ll) {
+    if (ll->size == 0) {
+        printf("Cannot pop from empty linked list");
+        exit(1);
+    }
+    LLNode *first = ll->start;
+    ll->start = first->next;
+    ll->size--;
+    Value *val = first->val;
+    deallocate(first);
+    return val;
+}
+
+Value *ll_at(LinkedList *ll, int index) {
+    if (index >= ll->size || 0 > index) {
+        printf("Invalid index for at\n");
+        exit(1);
+    }
+    LLNode *cur = ll->start;
+    for (int i = 0; i < index; ++i) {
+        cur = cur->next;
+    }
+    return ref(cur->val);
+}
+
 void ll_clear(LinkedList *ll) {
     LLNode *cur = ll->start;
     for (int i = 0; i < ll->size; ++i) {

@@ -41,7 +41,7 @@ Value *hm_get(HashMap *hm, Value *key) {
     Bucket *bucket = hm_exists(hm, key);
     value_unref(key);
     if (bucket) {
-        return bucket->value;
+        return ref(bucket->value);
     }
     printf("Key ");
     value_print(key);

@@ -58,6 +58,14 @@ Value *list_pop(List *list) {
     return val;
 }
 
+Value *list_at(List *list, int index) {
+    if (index >= list->size || 0 > index) {
+        printf("Invalid index for at\n");
+        exit(1);
+    }
+    return ref(list->val[index]);
+}
+
 void list_insert(List *list, int index, Value *val) {
     list_check_over(list);
     if (index > list->size || 0 > list->size) {

@@ -10,12 +10,15 @@
 
 
 int main() {
-    Vector *vec = vector_new(ValueType_Integer);
-    vector_push(vec, value_new_int(1));
-    vector_push(vec, value_new_int(2));
-    vector_push(vec, value_new_int(3));
+    Value *val1 = value_new_int(1);
+    Value *val2 = value_new_int(2);
+    Value *val3 = value_new_int(3);
+    Value *val4 = value_new_int(4);
 
-    vector_print(vec);
-
+    Vector *vec = vector_new_v(4, ValueType_Integer, val1, val2, val3, val4);
+    vector_print(vec); endln;
+    val1 = vector_pop(vec);
     vector_free(vec);
+    value_print(val1); endln;
+    value_free(val1);
 }
