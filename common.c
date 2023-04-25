@@ -24,3 +24,8 @@ __attribute__((destructor))
 void print_allocation_stats() {
     printf("\nAllocated: %d, Freed: %d", allocated, freed);
 }
+
+void error(char *message) {
+    printf("Error: %s\n", message);
+    exit(1);
+}
