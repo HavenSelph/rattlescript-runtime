@@ -38,10 +38,14 @@ char *value_type_to_string(ValueType type) {
     }
 }
 
+static int refs;
+static int unrefs;
+
 static Value *new_val(ValueType type) {
     Value *val = allocate(1, sizeof(Value));
     val->type = type;
     val->ref_count = 1;
+    refs++;
     return val;
 }
 
@@ -428,11 +432,13 @@ void value_free(Value *val) {
 }
 
 Value *value_ref(Value *val) {
+    refs++;
     val->ref_count++;
     return val;
 }
 
 void value_unref(Value *val) {
+    unrefs++;
     if (--val->ref_count > 0) return;
     value_free(val);
 }
@@ -467,4 +473,9 @@ void value_print(Value *val) {
             hm_print(val->as_hash_map);
             break;
     }
+}
+
+__attribute__((destructor))
+static void print_refs_unrefs() {
+    printf("\nValue Refs: %d, Unrefs: %d\n", refs, unrefs);
 }

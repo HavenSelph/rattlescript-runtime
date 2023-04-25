@@ -36,6 +36,8 @@ typedef struct HashMap HashMap;
 typedef struct String String;
 typedef struct Queue Queue;
 
+// TODO: Bring allocations down from three for Strings
+
 typedef struct Value {
     union {
         bool as_bool;
