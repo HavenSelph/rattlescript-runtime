@@ -49,12 +49,23 @@ void list_push(List *list, Value *val) {
 }
 
 Value *list_pop(List *list) {
-    list_check_over(list);
     if (list->size <= 0) {
         printf("List is empty\n");
         exit(1);
     }
     Value *val = list->val[--list->size];
+    return val;
+}
+
+Value *list_pop_at(List *list, int idx) {
+    if (list->size <= 0 || idx >= list->size || idx < 0) {
+        error("Invalid index for pop_at\n");
+    }
+    Value *val = list->val[idx];
+    for (int i = idx; i < list->size-1; ++i) {
+        list->val[i] = list->val[i+1];
+    }
+    list->size--;
     return val;
 }
 
