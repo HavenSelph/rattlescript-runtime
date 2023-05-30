@@ -8,17 +8,12 @@
 #include "Types/vector.h"
 
 int main() {
-    Value *hm = value_new_hash_map(hm_new());
-    Value *str = value_new_string(5, "Hello");
-    Value *str2 = value_new_string(5, "World");
-    for (int i = 0; i < 10000000; ++i) {
-        hm_push(hm->as_hash_map, value_new_int(i), (i%2==0) ? ref(str) : ref(str2));
-    }
-    printf("Done\n"); endln;
-    getchar();
-    value_unref(str);
-    value_unref(str2);
-    value_unref(hm);
-    printf("Freed\n"); endln;
-    getchar();
+    Value *val = value_new_int(5);
+    value_print(val); endln;
+
+    Value *list = value_new_list(list_new_v(4, value_new_int(1), value_new_int(2), value_new_int(3), ref(val)));
+    value_print(list); endln;
+    unref(list);
+    value_print(val); endln;
+    unref(val);
 }
