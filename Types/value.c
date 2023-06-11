@@ -241,7 +241,7 @@ Value *value_multiply(Value *left, Value *right) {
     return out;
 }
 
-Value *value_mod(Value *left, Value *right) {
+Value *value_modulo(Value *left, Value *right) {
     Value *out = NULL;
     if (left->type == ValueType_Integer && right->type == ValueType_Integer) {
         out = value_new_int(left->as_int % right->as_int);

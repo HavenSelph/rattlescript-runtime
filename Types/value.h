@@ -73,6 +73,7 @@ Value *value_add(Value *left, Value *right);
 Value *value_subtract(Value *left, Value *right);
 Value *value_power(Value *left, Value *right);
 Value *value_multiply(Value *left, Value *right);
+Value *value_modulo(Value *left, Value *right);
 Value *value_divide(Value *left, Value *right);
 
 Value *value_or(Value *left, Value *right);
