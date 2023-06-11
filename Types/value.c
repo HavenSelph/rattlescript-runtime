@@ -241,6 +241,24 @@ Value *value_multiply(Value *left, Value *right) {
     return out;
 }
 
+Value *value_mod(Value *left, Value *right) {
+    Value *out = NULL;
+    if (left->type == ValueType_Integer && right->type == ValueType_Integer) {
+        out = value_new_int(left->as_int % right->as_int);
+    } else if (left->type == ValueType_Float && right->type == ValueType_Integer) {
+        out = value_new_float(fmodf(left->as_float, (float) right->as_int));
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Float) {
+        out = value_new_float(fmodf((float) left->as_int, right->as_float));
+    } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
+        out = value_new_float(fmodf(left->as_float, right->as_float));
+    } else {
+        printf("\nCannot mod types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
+        exit(1);
+    }
+
+    unref2(left, right);
+    return out;
+}
 
 Value *value_divide(Value *left, Value *right) {
     Value *out = NULL;
