@@ -71,6 +71,7 @@ Value *value_hash(Value *val);
 
 Value *value_add(Value *left, Value *right);
 Value *value_subtract(Value *left, Value *right);
+Value *value_power(Value *left, Value *right);
 Value *value_multiply(Value *left, Value *right);
 Value *value_divide(Value *left, Value *right);
 
@@ -84,6 +85,7 @@ bool value_as_bool_c(Value *val);
 bool value_or_c(Value *left, Value *right);
 bool value_and_c(Value *left, Value *right);
 bool value_not_c(Value *val);
+int value_pow_int_c(int left, int right);
 int value_hash_c(Value *val);
 
 Value *value_ref(Value *val);

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <math.h>
 
 #include "common.h"
 #include "Types/value.h"
@@ -48,7 +49,6 @@ static Value *new_val(ValueType type) {
     refs++;
     return val;
 }
-
 
 Value *value_new_int(int num) {
     Value *val = new_val(ValueType_Integer);
@@ -180,6 +180,30 @@ Value *value_subtract(Value *left, Value *right) {
 
     } else {
         printf("\nCannot subtract types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
+        exit(1);
+    }
+
+    unref2(left, right);
+    return out;
+}
+
+Value *value_power(Value *left, Value *right) {
+    Value *out = NULL;
+
+    if (left->type == ValueType_Integer && right->type == ValueType_Integer) {
+        out = value_new_int(value_pow_int_c(left->as_int, right->as_int));
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Integer) {
+        out = value_new_float(powf(left->as_float, (float) right->as_int));
+
+    } else if (left->type == ValueType_Integer && right->type == ValueType_Float) {
+        out = value_new_float(powf((float) left->as_int, right->as_float));
+
+    } else if (left->type == ValueType_Float && right->type == ValueType_Float) {
+        out = value_new_float(powf(left->as_float, right->as_float));
+
+    } else {
+        printf("\nPower not possible on types %s and %s", value_type_to_string(left->type), value_type_to_string(right->type));
         exit(1);
     }
 
@@ -396,6 +420,17 @@ bool value_and_c(Value *left, Value *right) {
 bool value_not_c(Value *val) {
     bool out = !value_as_bool_c(val);
     return out;
+}
+
+int value_pow_int_c(int left, int right) {
+    int result = 1;
+    while (1) {
+        if (right & 1) result *= left;
+        right >>= 1;
+        if (!right) break;
+        left *= left;
+    }
+    return result;
 }
 
 

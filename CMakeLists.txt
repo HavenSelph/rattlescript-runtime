@@ -23,3 +23,5 @@ add_executable(DataTypes
         common.c
         common.h
         main.c Context/scope.c Context/scope.h)
+
+target_link_libraries(DataTypes m)
